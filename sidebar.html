@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gemini Nano Pro</title>
+    <link rel="stylesheet" href="sidebar.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="sidebar-container">
+        <header class="sidebar-header">
+            <div class="header-content">
+                <div class="logo-section">
+                    <div class="logo">
+                        <div class="logo-icon">✨</div>
+                        <div class="logo-text">
+                            <h1>Gemini Nano</h1>
+                            <span class="logo-subtitle">AI Assistant</span>
+                        </div>
+                    </div>
+                    <button class="btn-close" id="closePanel" title="Close sidebar">
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                            <path d="M13.4 3.4L12 2L8 6L4 2L2.6 3.4L6.6 7.4L2.6 11.4L4 12.8L8 8.8L12 12.8L13.4 11.4L9.4 7.4L13.4 3.4Z"/>
+                        </svg>
+                    </button>
+                </div>
+                
+                <div class="quick-stats">
+                    <div class="stat-item">
+                        <span class="stat-number" id="todayCount">0</span>
+                        <span class="stat-label">Today</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number" id="totalCount">0</span>
+                        <span class="stat-label">Total</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <main class="sidebar-main">
+            <div class="mode-selector">
+                <div class="mode-tabs">
+                    <button class="mode-tab active" data-mode="text">
+                        <span class="tab-icon">📝</span>
+                        <span class="tab-label">Text</span>
+                    </button>
+                    <button class="mode-tab" data-mode="image">
+                        <span class="tab-icon">🖼️</span>
+                        <span class="tab-label">Image</span>
+                    </button>
+                    <button class="mode-tab" data-mode="voice">
+                        <span class="tab-icon">🎤</span>
+                        <span class="tab-label">Voice</span>
+                    </button>
+                    <button class="mode-tab" data-mode="document">
+                        <span class="tab-icon">📄</span>
+                        <span class="tab-label">Doc</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="input-mode active" id="text-mode">
+                <div class="input-section">
+                    <div class="input-header">
+                        <label>Your Text</label>
+                        <button class="btn-paste" id="pasteText">
+                            <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor">
+                                <path d="M10 1H4C3.4 1 3 1.4 3 2V10C3 10.6 3.4 11 4 11H10C10.6 11 11 10.6 11 10V2C11 1.4 10.6 1 10 1ZM10 2V4H4V2H10ZM4 10V5H10V10H4Z"/>
+                            </svg>
+                            Paste
+                        </button>
+                    </div>
+                    <div class="textarea-container">
+                        <textarea id="inputText" placeholder="Enter text or select on page and right-click..." 
+                                 rows="4"></textarea>
+                        <div class="textarea-actions">
+                            <span class="char-count" id="charCount">0</span>
+                            <button class="btn-clear-text" id="clearText" title="Clear text">
+                                <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor">
+                                    <path d="M6 1C3.2 1 1 3.2 1 6S3.2 11 6 11 11 8.8 11 6 8.8 1 6 1ZM8.4 7.4L7.4 8.4 6 7 4.6 8.4 3.6 7.4 5 6 3.6 4.6 4.6 3.6 6 5 7.4 3.6 8.4 4.6 7 6 8.4 7.4Z"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="input-mode" id="image-mode">
+                <div class="input-section">
+                    <div class="upload-card" id="imageUploadArea">
+                        <div class="upload-icon">🖼️</div>
+                        <h3>Upload Image</h3>
+                        <p>Drag & drop or click to browse</p>
+                        <small>JPG, PNG, GIF, WebP • Max 5MB</small>
+                        <input type="file" id="imageInput" accept="image/*" hidden>
+                    </div>
+                    <div class="image-preview" id="imagePreview" hidden>
+                        <div class="preview-header">
+                            <span>Image Preview</span>
+                            <button class="btn-remove" id="removeImage">Remove</button>
+                        </div>
+                        <img id="previewImage" src="" alt="Preview">
+                    </div>
+                    <div class="capture-options">
+                        <button class="btn-capture" id="captureVisible">
+                            <span class="btn-icon">📸</span>
+                            Capture Tab
+                        </button>
+                        <button class="btn-capture" id="captureArea">
+                            <span class="btn-icon">🔲</span>
+                            Select Area
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="input-mode" id="voice-mode">
+                <div class="input-section">
+                    <div class="voice-controls">
+                        <button class="btn-record" id="startRecording">
+                            <span class="record-icon"></span>
+                            Start Recording
+                        </button>
+                        <div class="recording-indicator" id="recordingIndicator" hidden>
+                            <div class="pulsing-dot"></div>
+                            <span>Recording...</span>
+                            <button class="btn-stop" id="stopRecording">Stop</button>
+                        </div>
+                    </div>
+                    <div class="voice-visualizer" id="voiceVisualizer" hidden>
+                        <div class="visualizer-bars"></div>
+                    </div>
+                    <div class="transcript-section">
+                        <label>Live Transcript</label>
+                        <div class="transcript-box" id="transcriptText"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="input-mode" id="document-mode">
+                <div class="input-section">
+                    <div class="upload-card" id="documentUploadArea">
+                        <div class="upload-icon">📄</div>
+                        <h3>Upload Document</h3>
+                        <p>PDF, DOC, DOCX, or TXT files</p>
+                        <small>Max file size: 10MB</small>
+                        <input type="file" id="documentInput" accept=".pdf,.doc,.docx,.txt" hidden>
+                    </div>
+                    <div class="document-info" id="documentInfo" hidden>
+                        <div class="file-card">
+                            <div class="file-icon">📄</div>
+                            <div class="file-details">
+                                <span class="file-name" id="fileName"></span>
+                                <span class="file-size" id="fileSize"></span>
+                            </div>
+                        </div>
+                        <button class="btn-process" id="processDocument">
+                            Extract & Analyze Text
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="action-grid">
+                <button class="action-btn primary" data-action="summarize">
+                    <span class="action-icon">📋</span>
+                    <span class="action-label">Summarize</span>
+                </button>
+                <button class="action-btn" data-action="rewrite">
+                    <span class="action-icon">✍️</span>
+                    <span class="action-label">Rewrite</span>
+                </button>
+                <button class="action-btn" data-action="translate">
+                    <span class="action-icon">🌐</span>
+                    <span class="action-label">Translate</span>
+                </button>
+                <button class="action-btn" data-action="proofread">
+                    <span class="action-icon">✓</span>
+                    <span class="action-label">Proofread</span>
+                </button>
+                <button class="action-btn" data-action="expand">
+                    <span class="action-icon">📈</span>
+                    <span class="action-label">Expand</span>
+                </button>
+                <button class="action-btn" data-action="simplify">
+                    <span class="action-icon">💡</span>
+                    <span class="action-label">Simplify</span>
+                </button>
+            </div>
+
+            <div class="processing-indicator" id="processingIndicator" hidden>
+                <div class="spinner"></div>
+                <span>Processing with AI...</span>
+            </div>
+
+            <div class="output-section">
+                <div class="output-header">
+                    <h3>AI Result</h3>
+                    <div class="output-actions">
+                        <button class="btn-icon" id="copyOutput" title="Copy">
+                            <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                                <path d="M13 1H6C5.4 1 5 1.4 5 2V11C5 11.6 5.4 12 6 12H13C13.6 12 14 11.6 14 11V2C14 1.4 13.6 1 13 1ZM13 2V11H6V2H13ZM3 4H2V13C2 13.6 2.4 14 3 14H9V13H3V4Z"/>
+                            </svg>
+                        </button>
+                        <button class="btn-icon" id="saveOutput" title="Save">
+                            <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                                <path d="M13 1H3C2.4 1 2 1.4 2 2V14C2 14.6 2.4 15 3 15H13C13.6 15 14 14.6 14 14V2C14 1.4 13.6 1 13 1ZM13 2V5H3V2H13ZM3 14V6H13V14H3Z"/>
+                            </svg>
+                        </button>
+                        <button class="btn-icon" id="speakOutput" title="Speak" hidden>
+                            <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                                <path d="M8 1C6.3 1 5 2.3 5 4V8C5 9.7 6.3 11 8 11S11 9.7 11 8V4C11 2.3 9.7 1 8 1ZM8 2C9.1 2 10 2.9 10 4V8C10 9.1 9.1 10 8 10S6 9.1 6 8V4C6 2.9 6.9 2 8 2ZM13 8C13 10.2 11.2 12 9 12H8V13H9C11.8 13 14 10.8 14 8H13ZM3 8C3 10.2 4.8 12 7 12H8V13H7C4.2 13 2 10.8 2 8H3Z"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                <div class="output-content" id="outputText">
+                    <div class="empty-state">
+                        <div class="empty-icon">✨</div>
+                        <p>Your AI-generated content will appear here</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer class="sidebar-footer">
+            <div class="footer-actions">
+                <button class="footer-btn" id="historyBtn">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                        <path d="M8 1C4.1 1 1 4.1 1 8S4.1 15 8 15 15 11.9 15 8 11.9 1 8 1ZM8 2C11.3 2 14 4.7 14 8S11.3 14 8 14 2 11.3 2 8 4.7 2 8 2ZM7.5 4V8.1L10.7 10.3 11.3 9.6 8.5 7.7V4H7.5Z"/>
+                    </svg>
+                    History
+                </button>
+                <button class="footer-btn" id="settingsBtn">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                        <path d="M8 1C4.1 1 1 4.1 1 8S4.1 15 8 15 15 11.9 15 8 11.9 1 8 1ZM8 2C11.3 2 14 4.7 14 8S11.3 14 8 14 2 11.3 2 8 4.7 2 8 2ZM7.5 4V8.1L10.7 10.3 11.3 9.6 8.5 7.7V4H7.5Z"/>
+                    </svg>
+                    Settings
+                </button>
+            </div>
+            <div class="footer-status" id="status">
+                Ready to assist
+            </div>
+        </footer>
+    </div>
+
+    <script src="sidebar.js"></script>
+</body>
+</html>

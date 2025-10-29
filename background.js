@@ -68,7 +68,13 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
 });
 
 chrome.action.onClicked.addListener((tab) => {
-    chrome.action.openPopup();
+   chrome.sidePanel.open({ windowId: tab.windowId }); 
+});
+chrome.runtime.onInstalled.addListener(() => {
+    chrome.sidePanel.setOptions({
+        path: 'sidebar.html',
+        enabled: true
+    });
 });
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
