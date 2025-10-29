@@ -3,120 +3,113 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Gemini Nano Assistant - History</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Gemini Nano Pro - History</title>
     <link rel="stylesheet" href="history.css">
-    <style>
-        body {
-            width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            font-family: 'Segoe UI', system-ui, sans-serif;
-        }
-        .history-container {
-            max-width: 700px;
-            margin: 0 auto;
-        }
-        .history-actions {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-        .history-item {
-            background: var(--surface);
-            border-radius: var(--radius-sm);
-            padding: 15px;
-            margin-bottom: 15px;
-            border: 1px solid var(--border);
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        .history-item:hover {
-            border-color: var(--primary);
-            transform: translateY(-2px);
-            box-shadow: var(--shadow);
-        }
-        .history-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-        }
-        .history-action {
-            background: var(--primary);
-            color: white;
-            padding: 4px 8px;
-            border-radius: 12px;
-            font-size: 11px;
-            font-weight: 600;
-        }
-        .history-timestamp {
-            font-size: 12px;
-            color: var(--text-tertiary);
-        }
-        .history-preview {
-            font-size: 13px;
-            color: var(--text-secondary);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        .history-detail {
-            display: none;
-            margin-top: 15px;
-            padding-top: 15px;
-            border-top: 1px solid var(--border);
-        }
-        .history-detail.show {
-            display: block;
-        }
-        .detail-section {
-            margin-bottom: 15px;
-        }
-        .detail-label {
-            font-weight: 600;
-            margin-bottom: 5px;
-            color: var(--text-primary);
-        }
-        .detail-content {
-            background: white;
-            padding: 10px;
-            border-radius: 6px;
-            border: 1px solid var(--border);
-            white-space: pre-wrap;
-            font-size: 13px;
-            line-height: 1.4;
-        }
-        .empty-state {
-            text-align: center;
-            padding: 40px 20px;
-            color: var(--text-tertiary);
-        }
-    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="history-container">
-        <div class="header">
-            <h1>Gemini Nano Assistant</h1>
-            <p class="subtitle">Conversion History</p>
-        </div>
-        
+        <header class="history-header">
+            <h1>Gemini Nano Pro</h1>
+            <p class="history-subtitle">Conversion History & Analytics</p>
+            
+            <div class="stats-overview">
+                <div class="stat-card">
+                    <span class="stat-number" id="totalConversions">0</span>
+                    <span class="stat-label">Total Conversions</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number" id="todayConversions">0</span>
+                    <span class="stat-label">Today</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number" id="frequentAction">-</span>
+                    <span class="stat-label">Most Used Action</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number" id="avgLength">0</span>
+                    <span class="stat-label">Avg. Text Length</span>
+                </div>
+            </div>
+        </header>
+
         <div class="history-actions">
-            <button id="clearHistory" class="btn btn-secondary">🗑️ Clear All History</button>
-            <button id="exportHistory" class="btn btn-secondary">📤 Export History</button>
-            <button id="backBtn" class="btn btn-secondary">← Back to Assistant</button>
+            <button id="backBtn" class="action-btn btn-primary" type="button">
+                <span>←</span>
+                Back to Assistant
+            </button>
+            <button id="exportHistory" class="action-btn btn-secondary" type="button">
+                <span>📤</span>
+                Export as CSV
+            </button>
+            <button id="clearHistory" class="action-btn btn-danger" type="button">
+                <span>🗑️</span>
+                Clear All History
+            </button>
+            <button id="refreshHistory" class="action-btn btn-secondary" type="button">
+                <span>🔄</span>
+                Refresh
+            </button>
         </div>
-        <div id="historyList"></div>
-        
-        <div id="emptyState" class="empty-state">
-            <h3>No conversion history yet</h3>
-            <h3>No conversion history yet</h3>
-            <p>Your text conversions will appear here once you start using the Gemini Nano Assistant.</p>
+
+        <div class="filters-section">
+            <div class="filters-header">
+                <span class="filters-title">Filter History</span>
+            </div>
+            <div class="filter-controls">
+                <div class="filter-group">
+                    <label class="filter-label">Action Type</label>
+                    <select id="actionFilter" class="filter-select" aria-label="Action Type">
+                        <option value="all">All Actions</option>
+                        <option value="summarize">Summarize</option>
+                        <option value="rewrite">Rewrite</option>
+                        <option value="translate">Translate</option>
+                        <option value="proofread">Proofread</option>
+                        <option value="expand">Expand</option>
+                        <option value="simplify">Simplify</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label class="filter-label">Time Period</label>
+                    <select id="timeFilter" class="filter-select" aria-label="Time Period">
+                        <option value="all">All Time</option>
+                        <option value="today">Today</option>
+                        <option value="week">Past Week</option>
+                        <option value="month">Past Month</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label class="filter-label">Sort By</label>
+                    <select id="sortFilter" class="filter-select" aria-label="Sort By">
+                        <option value="newest">Newest First</option>
+                        <option value="oldest">Oldest First</option>
+                        <option value="action">Action Type</option>
+                    </select>
+                </div>
+            </div>
         </div>
-        
-        <div id="status" class="status"></div>
+
+        <div class="history-list" id="historyList">
+        </div>
+
+        <div id="emptyState" class="empty-state" hidden>
+            <div class="empty-icon">📊</div>
+            <h2 class="empty-title">No Conversion History Yet</h2>
+            <p class="empty-description">
+                Your AI-powered conversions will appear here once you start using<br>
+                the Gemini Nano Assistant for text processing.
+            </p>
+            <div class="empty-actions">
+                <button id="emptyBackBtn" class="action-btn btn-primary" type="button">
+                    <span>✨</span>
+                    Start Using Assistant
+                </button>
+            </div>
+        </div>
+
+        <div id="status" class="status" hidden></div>
     </div>
-    
+
     <script src="history.js"></script>
 </body>
 </html>
