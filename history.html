@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Gemini Nano Assistant - History</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="history.css">
+    <style>
+        body {
+            width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+        .history-container {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        .history-actions {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .history-item {
+            background: var(--surface);
+            border-radius: var(--radius-sm);
+            padding: 15px;
+            margin-bottom: 15px;
+            border: 1px solid var(--border);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .history-item:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+        .history-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .history-action {
+            background: var(--primary);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+        .history-timestamp {
+            font-size: 12px;
+            color: var(--text-tertiary);
+        }
+        .history-preview {
+            font-size: 13px;
+            color: var(--text-secondary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .history-detail {
+            display: none;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid var(--border);
+        }
+        .history-detail.show {
+            display: block;
+        }
+        .detail-section {
+            margin-bottom: 15px;
+        }
+        .detail-label {
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: var(--text-primary);
+        }
+        .detail-content {
+            background: white;
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            white-space: pre-wrap;
+            font-size: 13px;
+            line-height: 1.4;
+        }
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-tertiary);
+        }
+    </style>
+</head>
+<body>
+    <div class="history-container">
+        <div class="header">
+            <h1>Gemini Nano Assistant</h1>
+            <p class="subtitle">Conversion History</p>
+        </div>
+        
+        <div class="history-actions">
+            <button id="clearHistory" class="btn btn-secondary">🗑️ Clear All History</button>
+            <button id="exportHistory" class="btn btn-secondary">📤 Export History</button>
+            <button id="backBtn" class="btn btn-secondary">← Back to Assistant</button>
+        </div>
+        <div id="historyList"></div>
+        
+        <div id="emptyState" class="empty-state">
+            <h3>No conversion history yet</h3>
+            <h3>No conversion history yet</h3>
+            <p>Your text conversions will appear here once you start using the Gemini Nano Assistant.</p>
+        </div>
+        
+        <div id="status" class="status"></div>
+    </div>
+    
+    <script src="history.js"></script>
+</body>
+</html>

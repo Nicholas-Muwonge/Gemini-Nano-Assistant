@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Gemini Nano Assistant - Settings</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+        .settings-container {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        .setting-group {
+            background: var(--surface);
+            border-radius: var(--radius-sm);
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid var(--border);
+        }
+        .setting-item {
+            margin-bottom: 15px;
+        }
+        .setting-label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        .setting-description {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        input[type="number"] {
+            width: 80px;
+            padding: 8px;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+        }
+        .actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 30px;
+        }
+        .btn-save {
+            background: var(--secondary);
+            color: white;
+        }
+        .btn-reset {
+            background: var(--text-tertiary);
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="settings-container">
+        <div class="header">
+            <h1>Gemini Nano Assistant</h1>
+            <p class="subtitle">Settings</p>
+        </div>
+        
+        <div class="setting-group">
+            <h3>⚙️ General Settings</h3>
+            
+            <div class="setting-item">
+                <label class="setting-label" for="defaultTone">Default Tone</label>
+                <select id="defaultTone" class="select-wrapper">
+                    <option value="professional">Professional</option>
+                    <option value="casual">Casual</option>
+                    <option value="formal">Formal</option>
+                    <option value="friendly">Friendly</option>
+                    <option value="academic">Academic</option>
+                </select>
+                <div class="setting-description">Default tone for text rewriting</div>
+            </div>
+            
+            <div class="setting-item">
+                <label class="setting-label" for="defaultLanguage">Default Translation Language</label>
+                <select id="defaultLanguage" class="select-wrapper">
+                    <option value="en">English</option>
+                    <option value="es">Spanish</option>
+                    <option value="fr">French</option>
+                    <option value="de">German</option>
+                    <option value="it">Italian</option>
+                    <option value="pt">Portuguese</option>
+                    <option value="zh">Chinese</option>
+                    <option value="ja">Japanese</option>
+                    <option value="ko">Korean</option>
+                </select>
+                <div class="setting-description">Default target language for translation</div>
+            </div>
+        </div>
+        
+        <div class="setting-group">
+            <h3>📊 Behavior Settings</h3>
+            
+            <div class="setting-item">
+                <div class="checkbox-group">
+                    <input type="checkbox" id="autoCopy">
+                    <label class="setting-label" for="autoCopy">Auto-copy results to clipboard</label>
+                </div>
+                <div class="setting-description">Automatically copy processed text to clipboard</div>
+            </div>
+            
+            <div class="setting-item">
+                <div class="checkbox-group">
+                    <input type="checkbox" id="saveHistory" checked>
+                    <label class="setting-label" for="saveHistory">Save conversion history</label>
+                </div>
+                <div class="setting-description">Store your text conversions for later reference</div>
+            </div>
+            
+            <div class="setting-item">
+                <label class="setting-label" for="maxHistoryItems">Maximum History Items</label>
+                <input type="number" id="maxHistoryItems" min="10" max="200" value="50" title="Maximum number of history items to keep" placeholder="50">
+                <div class="setting-description">Maximum number of conversions to keep in history</div>
+            </div>
+        </div>
+        
+        <div class="setting-group">
+            <h3>🔧 Advanced Settings</h3>
+            
+            <div class="setting-item">
+                <div class="checkbox-group">
+                    <input type="checkbox" id="enableAIFallback">
+                    <label class="setting-label" for="enableAIFallback">Enable AI Fallback Mode</label>
+                </div>
+                <div class="setting-description">Use enhanced mock responses when Chrome AI is unavailable</div>
+            </div>
+            
+            <div class="setting-item">
+                <div class="checkbox-group">
+                    <input type="checkbox" id="showTimestamps">
+                    <label class="setting-label" for="showTimestamps">Show timestamps in results</label>
+                </div>
+                <div class="setting-description">Include generation time in output</div>
+            </div>
+        </div>
+        
+        <div class="actions">
+            <button id="saveBtn" class="btn btn-save">💾 Save Settings</button>
+            <button id="resetBtn" class="btn btn-reset">🔄 Reset to Defaults</button>
+        </div>
+        
+        <div id="status" class="status"></div>
+    </div>
+    
+    <script src="settings.js"></script>
+</body>
+</html>

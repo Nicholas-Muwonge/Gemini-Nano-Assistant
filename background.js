@@ -1,17 +1,12 @@
-// Service Worker for Gemini Nano Assistant
-
-// Create context menu when extension is installed
 chrome.runtime.onInstalled.addListener(() => {
     console.log('Gemini Nano Assistant installed');
     
-    // Create parent context menu
     chrome.contextMenus.create({
         id: "geminiNanoParent",
         title: "Gemini Nano Assistant",
         contexts: ["selection"]
     });
 
-    // Create child menu items
     const menuItems = [
         {
             id: "summarize",
@@ -32,6 +27,16 @@ chrome.runtime.onInstalled.addListener(() => {
             id: "proofread",
             title: "✓ Proofread Selection",
             contexts: ["selection"]
+        },
+        {
+            id: "expand",
+            title: "📈 Expand Selection",
+            contexts: ["selection"]
+        },
+        {
+            id: "simplify",
+            title: "💡 Simplify Selection",
+            contexts: ["selection"]
         }
     ];
 
@@ -45,7 +50,6 @@ chrome.runtime.onInstalled.addListener(() => {
     });
 });
 
-// Handle context menu clicks
 chrome.contextMenus.onClicked.addListener((info, tab) => {
     const selectedText = info.selectionText;
     
@@ -53,20 +57,37 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
         return;
     }
 
-    // Store the selected text and action for the popup
     chrome.storage.local.set({
         pendingAction: {
             action: info.menuItemId,
             text: selectedText
         }
     }, () => {
-        // Open the popup
         chrome.action.openPopup();
     });
 });
 
-// Handle extension icon click
 chrome.action.onClicked.addListener((tab) => {
-    // Just open the popup, selected text will be loaded automatically
     chrome.action.openPopup();
+});
+
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+    if (request.action === 'getSelectedText') {
+        chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
+            chrome.scripting.executeScript({
+                target: {tabId: tabs[0].id},
+                function: () => window.getSelection().toString()
+            }, (results) => {
+                sendResponse({text: results[0].result});
+            });
+        });
+        return true; // Will respond asynchronously
+    }
+    if (request.action === 'screenshotCaptured') {
+         chrome.storage.local.set({ 
+            pendingScreenshot: request.dataUrl 
+        }, () => {
+            chrome.action.openPopup();
+        });
+    }
 });
