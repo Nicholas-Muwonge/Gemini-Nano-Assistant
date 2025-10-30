@@ -148,18 +148,232 @@ class GeminiSidebar {
         stopRecording.addEventListener('click', () => this.stopVoiceRecording());
     }
 
+    // Document Processing Methods - UPDATED
     setupDocumentProcessing() {
         const documentUploadArea = document.getElementById('documentUploadArea');
         const documentInput = document.getElementById('documentInput');
         const processDocument = document.getElementById('processDocument');
 
+        // Click to upload
         documentUploadArea.addEventListener('click', () => {
-            console.log('Document upload clicked');
+            console.log('Document upload area clicked');
             documentInput.click();
         });
         
+        // File input change
         documentInput.addEventListener('change', (e) => this.handleDocumentUpload(e));
+
+        // Drag and drop handlers
+        documentUploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            documentUploadArea.style.borderColor = 'var(--primary)';
+            documentUploadArea.style.background = 'var(--primary-light)';
+            console.log('Document drag over');
+        });
+
+        documentUploadArea.addEventListener('dragleave', () => {
+            documentUploadArea.style.borderColor = 'var(--border)';
+            documentUploadArea.style.background = 'var(--bg-secondary)';
+            console.log('Document drag leave');
+        });
+        // Add remove document functionality
+        document.getElementById('removeDocument').addEventListener('click', () => {
+            this.removeDocument();
+        });
+
+        documentUploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            documentUploadArea.style.borderColor = 'var(--border)';
+            documentUploadArea.style.background = 'var(--bg-secondary)';
+            
+            console.log('Document drop event', e.dataTransfer.files);
+            
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                const file = files[0];
+                if (this.isValidDocumentFile(file)) {
+                    console.log('Valid document file dropped:', file.name);
+                    this.handleDocumentFile(file);
+                } else {
+                    this.showTempStatus('Please upload a valid document file (PDF, DOC, DOCX, TXT)', 'error');
+                }
+            }
+        });
+
         processDocument.addEventListener('click', () => this.processUploadedDocument());
+    }
+
+    // Remove document method
+    removeDocument() {
+        const documentInfo = document.getElementById('documentInfo');
+        const documentUploadArea = document.getElementById('documentUploadArea');
+        const documentInput = document.getElementById('documentInput');
+        
+        documentInfo.classList.add('hidden');
+        documentUploadArea.classList.remove('hidden');
+        documentInput.value = '';
+        this.currentDocumentFile = null;
+        
+        this.showTempStatus('Document removed', 'success');
+        console.log('Document removed');
+    }
+
+    // Validate document file type
+    isValidDocumentFile(file) {
+        const validTypes = [
+            'application/pdf',
+            'application/msword',
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+            'text/plain'
+        ];
+        
+        const validExtensions = ['.pdf', '.doc', '.docx', '.txt'];
+        const fileExtension = '.' + file.name.split('.').pop().toLowerCase();
+        
+        return validTypes.includes(file.type) || validExtensions.includes(fileExtension);
+    }
+
+    // Handle document upload from input
+    handleDocumentUpload(e) {
+        const file = e.target.files[0];
+        if (file && this.isValidDocumentFile(file)) {
+            console.log('Document file selected via input:', file.name);
+            this.handleDocumentFile(file);
+        } else if (file) {
+            this.showTempStatus('Please select a valid document file (PDF, DOC, DOCX, TXT)', 'error');
+        }
+    }
+
+    // Handle document file processing
+    handleDocumentFile(file) {
+        console.log('Handling document file:', file.name, file.size, file.type);
+        
+        const documentInfo = document.getElementById('documentInfo');
+        const fileName = document.getElementById('fileName');
+        const fileSize = document.getElementById('fileSize');
+        
+        // Update UI with file info
+        fileName.textContent = file.name;
+        fileSize.textContent = this.formatFileSize(file.size);
+        documentInfo.classList.remove('hidden');
+        
+        // Store the file for processing
+        this.currentDocumentFile = file;
+        
+        this.showTempStatus(`Document "${file.name}" ready for processing`, 'success');
+    }
+
+    // Process the uploaded document
+    async processUploadedDocument() {
+        if (!this.currentDocumentFile) {
+            this.showTempStatus('Please upload a document first', 'error');
+            return;
+        }
+
+        try {
+            this.updateStatus('Extracting text from document...', 'loading');
+            console.log('Starting document processing:', this.currentDocumentFile.name);
+            
+            const text = await this.extractTextFromDocument(this.currentDocumentFile);
+            
+            // Set the extracted text in the input field
+            document.getElementById('inputText').value = text;
+            document.getElementById('charCount').textContent = text.length;
+            
+            // Switch to text mode to show the extracted content
+            this.switchToTextMode();
+            
+            this.updateStatus('Document processed successfully! Text extracted and ready for AI processing.', 'success');
+            console.log('Document processing completed');
+            
+        } catch (error) {
+            console.error('Document processing error:', error);
+            this.updateStatus('Failed to process document: ' + error.message, 'error');
+        }
+    }
+
+    // Switch to text mode programmatically
+    switchToTextMode() {
+        const textModeTab = document.querySelector('.mode-tab[data-mode="text"]');
+        if (textModeTab) {
+            textModeTab.click();
+        }
+    }
+
+    // Enhanced text extraction with better error handling
+    async extractTextFromDocument(file) {
+        return new Promise((resolve, reject) => {
+            console.log('Extracting text from:', file.name, file.type);
+            
+            const reader = new FileReader();
+            
+            reader.onload = (e) => {
+                try {
+                    const content = e.target.result;
+                    console.log('File read successfully, length:', content.length);
+                    
+                    let extractedText = '';
+                    
+                    if (file.type === 'application/pdf') {
+                        extractedText = this.extractTextFromPDF(file, content);
+                    } else if (file.type.includes('word') || 
+                            file.name.endsWith('.doc') || 
+                            file.name.endsWith('.docx')) {
+                        extractedText = this.extractTextFromWord(file, content);
+                    } else if (file.type === 'text/plain' || file.name.endsWith('.txt')) {
+                        extractedText = content;
+                    } else {
+                        reject(new Error(`Unsupported document format: ${file.type}`));
+                        return;
+                    }
+                    
+                    console.log('Text extraction completed, length:', extractedText.length);
+                    resolve(extractedText);
+                    
+                } catch (error) {
+                    console.error('Error in file reader onload:', error);
+                    reject(new Error('Failed to process document content: ' + error.message));
+                }
+            };
+            
+            reader.onerror = (error) => {
+                console.error('FileReader error:', error);
+                reject(new Error('Failed to read file: ' + error.message));
+            };
+            
+            reader.onabort = () => {
+                reject(new Error('File reading was aborted'));
+            };
+            
+            // Choose reading method based on file type
+            if (file.type === 'text/plain') {
+                reader.readAsText(file);
+            } else {
+                // For binary files, read as array buffer
+                reader.readAsArrayBuffer(file);
+            }
+        });
+    }
+
+    // PDF text extraction (mock implementation - would use PDF.js in production)
+    extractTextFromPDF(file, content) {
+        console.log('Mock PDF extraction for:', file.name);
+        return `PDF Document: ${file.name}\n\n[This is a mock text extraction from a PDF file]\n\nIn a production environment, this would use PDF.js library to extract actual text content from the PDF document. The extracted text would appear here for AI processing.\n\nFile: ${file.name}\nSize: ${this.formatFileSize(file.size)}\nType: ${file.type}\n\nFor demonstration purposes, you can paste your actual PDF content in the text mode or use this mock text to test AI functionality.`;
+    }
+
+    // Word document text extraction (mock implementation)
+    extractTextFromWord(file, content) {
+        console.log('Mock Word document extraction for:', file.name);
+        return `Word Document: ${file.name}\n\n[This is a mock text extraction from a Word document]\n\nIn a production environment, this would use a Word document parser to extract actual text content. The extracted text would appear here for AI processing.\n\nFile: ${file.name}\nSize: ${this.formatFileSize(file.size)}\nType: ${file.type}\n\nFor demonstration purposes, you can paste your actual document content in the text mode or use this mock text to test AI functionality.`;
+    }
+
+    // Enhanced file size formatting
+    formatFileSize(bytes) {
+        if (bytes === 0) return '0 Bytes';
+        const k = 1024;
+        const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
     }
 
     setupTextToSpeech() {
@@ -400,7 +614,6 @@ class GeminiSidebar {
             this.updateStatus('Capturing visible tab...', 'loading');
             console.log('Capturing visible tab');
             
-            const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
             const dataUrl = await chrome.tabs.captureVisibleTab(null, { format: 'png' });
             
             const previewImage = document.getElementById('previewImage');

@@ -144,10 +144,14 @@
                     <div class="upload-card" id="documentUploadArea">
                         <div class="upload-icon">📄</div>
                         <h3>Upload Document</h3>
-                        <p>PDF, DOC, DOCX, or TXT files</p>
-                        <small>Max file size: 10MB</small>
+                        <p>Drag & drop or click to browse</p>
+                        <small>Supported: PDF, DOC, DOCX, TXT • Max 10MB</small>
                         <input type="file" id="documentInput" accept=".pdf,.doc,.docx,.txt" hidden>
+                        <div class="upload-hint doc-upload-hint">
+                            💡 Files are processed locally - your documents stay private
+                        </div>
                     </div>
+                    
                     <div class="document-info" id="documentInfo" hidden>
                         <div class="file-card">
                             <div class="file-icon">📄</div>
@@ -155,10 +159,29 @@
                                 <span class="file-name" id="fileName"></span>
                                 <span class="file-size" id="fileSize"></span>
                             </div>
+                            <button type="button" class="btn-remove" id="removeDocument" title="Remove document">
+                                <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                                    <path d="M8 1C4.1 1 1 4.1 1 8S4.1 15 8 15 15 11.9 15 8 11.9 1 8 1ZM8 2C11.3 2 14 4.7 14 8S11.3 14 8 14 2 11.3 2 8 4.7 2 8 2ZM10.4 11L8 8.6 5.6 11 5 10.4 7.4 8 5 5.6 5.6 5 8 7.4 10.4 5 11 5.6 8.6 8 11 10.4Z"/>
+                                </svg>
+                            </button>
                         </div>
-                        <button class="btn-process" id="processDocument">
-                            Extract & Analyze Text
+                        <button type="button" class="btn-process" id="processDocument">
+                            <span class="icon-spacer">🔍</span>
+                            Extract Text & Analyze
                         </button>
+                        <div class="processing-note processing-note--center">
+                            Text will be extracted and ready for AI processing
+                        </div>
+                    </div>
+                    
+                    <div class="document-limits document-limits--box">
+                        <h4 class="supported-docs-title">📋 Supported Documents</h4>
+                        <div class="supported-grid">
+                            <div>• PDF Files</div>
+                            <div>• Word Documents</div>
+                            <div>• Text Files</div>
+                            <div>• Max 10MB</div>
+                        </div>
                     </div>
                 </div>
             </div>

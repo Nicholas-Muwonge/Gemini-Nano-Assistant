@@ -323,17 +323,25 @@ body {
     cursor: pointer;
     transition: var(--transition-slow);
     background: var(--bg-secondary);
+    position: relative;
 }
 
 .upload-card:hover {
     border-color: var(--primary);
     background: var(--primary-light);
+    transform: translate(-2px);
+}
+.upload-card.dragover {
+    border-color: var(--primary);
+    background: var(--primary-light);
+    transform: scale(1.02);
 }
 
 .upload-icon {
     font-size: 32px;
     margin-bottom: var(--space-3);
     opacity: 0.7;
+    transition: opacity 0.3s ease;
 }
 
 .upload-card h3 {
@@ -527,22 +535,27 @@ body {
     border: 1px solid var(--border);
     border-radius: var(--radius-md);
     background: var(--bg-primary);
+    margin-bottom: var(--space-3);
+    position: relative;
 }
 
 .file-icon {
     font-size: 20px;
+    opacity: 0.8;
 }
 
 .file-details {
     flex: 1;
     display: flex;
     flex-direction: column;
+    gap: 2px;
 }
 
 .file-name {
     font-weight: 500;
     color: var(--text-primary);
     font-size: var(--font-size-sm);
+    word-break: break-word;
 }
 
 .file-size {
